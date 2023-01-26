@@ -16,6 +16,11 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </li>
+                <li class="nav-item">
+                    <x-nav-link :href="route('series.index')" class="nav-link" :active="request()->routeIs('series.index')">
+                        {{ __('Series') }}
+                    </x-nav-link>
+                </li>
                 <li class="navbar-text d-lg-none border-top fw-semibold ">
                         {{ Auth::user()->name }}
                        - {{ Auth::user()->email }}
@@ -59,6 +64,6 @@
                 </ul>
             </div>
         </div>
-        
+
     </div>
 </nav>
