@@ -11,29 +11,11 @@ class SeriesController extends Controller
 {
     public function __construct()
     {
-        
     }
 
     public function index(Request $request)
     {
         $user = $request->user();
-        $seriesCollection = [
-            (object)[
-                'name' => 'Series Example'
-            ],
-            (object)[
-                'name' => 'Series Example'
-            ],
-            (object)[
-                'name' => 'Series Example'
-            ],
-            (object)[
-                'name' => 'Series Example'
-            ],
-            (object)[
-                'name' => 'Series Example'
-            ],
-        ];
         $seriesCollection = $user->series;
 
         return view('series.index', compact('seriesCollection'));
@@ -64,6 +46,12 @@ class SeriesController extends Controller
             ->save($series);
         $user->refresh();
 
+        return redirect()->route('series.index');
+    }
+
+    public function destroy(Series $series)
+    {
+        $series->delete();
         return redirect()->route('series.index');
     }
 }

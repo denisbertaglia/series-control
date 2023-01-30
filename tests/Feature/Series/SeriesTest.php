@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Series;
 
+use App\Models\Series;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -59,6 +60,24 @@ class SeriesTest extends TestCase
 
         $this->assertNotEmpty($series, "The series does not exist in the database");
 
+        $response
+            ->assertRedirect('/series');
+    }
+
+    public function test_series_remove()
+    {
+        $user = User::factory()
+            ->has(Series::factory()->count(2))
+            ->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->from('/series')
+            ->delete("/series/{$user->series[0]->id}");
+
+        $user->refresh();
+
+        $this->assertCount(1,$user->series,"There are 2 series in the database instead of 1");
         $response
             ->assertRedirect('/series');
     }
