@@ -32,7 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/series/create', [SeriesController::class, 'create'])->name('series.create');
     Route::post('/series/store', [SeriesController::class, 'store'])->name('series.store');
     Route::delete('/series/{series}', [SeriesController::class, 'destroy'])->name('series.destroy');
-
+    Route::get('/series/{series}/edit', [SeriesController::class, 'edit'])->name('series.edit');
+    Route::patch('/series/{series}', [SeriesController::class, 'update'])->name('series.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

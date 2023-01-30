@@ -4,6 +4,7 @@ namespace Tests\Feature\Series;
 
 use App\Models\Series;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -77,8 +78,50 @@ class SeriesTest extends TestCase
 
         $user->refresh();
 
-        $this->assertCount(1,$user->series,"There are 2 series in the database instead of 1");
+        $this->assertCount(1, $user->series, "There are 2 series in the database instead of 1");
         $response
             ->assertRedirect('/series');
+    }
+
+    public function test_screen_of_series_update_can_be_rendered()
+    {
+        $user = User::factory()
+            ->has(Series::factory()->count(2))
+            ->create();
+
+        /** @var  Series */
+        $series = $user->series->first();
+
+        $response = $this->actingAs($user)
+            ->from('/series')
+            ->get("/series/{$series->id}/edit");
+
+        $response->assertStatus(200);
+    }
+
+    public function test_series_update_can_be_done()
+    {
+        $serieName = "The Example 2";
+        $user = User::factory()
+            ->has(Series::factory()->count(2))
+            ->create();
+
+        /** @var  Series */
+        $series = $user->series->first();
+
+        $response = $this->actingAs($user)
+            ->from("/series/{$series->id}/edit")
+            ->patch(
+                "/series/{$series->id}",
+                [
+                    'name' => $serieName
+                ]
+            );
+        $user->refresh();
+
+        $seriesNewName = $user->series->first()->name;
+
+        $response->assertRedirect('/series');
+        $this->assertEquals($serieName,$seriesNewName,"The name of the series has not changed");
     }
 }

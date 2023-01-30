@@ -49,6 +49,22 @@ class SeriesController extends Controller
         return redirect()->route('series.index');
     }
 
+    public function edit(Series $series)
+    {
+        return view('series.edit', compact('series'));
+    }
+
+    public function update(Series $series, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:2',
+        ]);
+        $series->name = $request->name;
+        $series->save();
+
+        return redirect()->route('series.index');;
+    }
+
     public function destroy(Series $series)
     {
         $series->delete();

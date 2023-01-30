@@ -20,12 +20,9 @@
                         {{$series->name}}
                     </a>
                     <span class="d-flex gap-2 justify-content-between align-content-center">
-                        <form action="" method="get">
-                            @csrf
-                            <button class="btn btn-warning">
-                                {{__("Edit")}}
-                            </button>
-                        </form>
+                        <a href="{{route('series.edit',['series' =>$series])}}" class="btn btn-warning">
+                            {{__("Edit")}}
+                        </a>
                         <x-danger-button data-bs-toggle="modal" data-bs-target="#confirmSeriesDeletion"
                             data-bs-action="{{ route('series.destroy',['series' =>$series]) }}">
                             {{__("Remove")}}
