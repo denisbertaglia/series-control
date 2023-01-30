@@ -9,11 +9,11 @@
         <div class="row">
             <div class="p-4 bg-white shadow rounded">
                 <div class="d-flex align-content-center mb-2">
-                    <a href="#" class="btn btn-primary">
+                    <a href="{{route('series.create')}}" class="btn btn-primary">
                         {{__("Add")}}
                     </a>
                 </div>
-                @foreach ($seriesCollection as $series)
+                @forelse ($seriesCollection as $series)
                 <div
                     class="border my-2 p-2 rounded d-flex flex-column flex-sm-row justify-content-sm-between align-content-center">
                     <a href="#" class="p-1 text-break">
@@ -33,9 +33,16 @@
                             </button>
                         </form>
                     </span>
+
                 </div>
-                @endforeach
+                @empty
+                <div
+                    class="border my-2 p-2 rounded d-flex flex-column flex-sm-row justify-content-center align-content-center">
+                    <h2 class="fs-5 text-body text-opacity-2">
+                        {{__("No Series")}}
+                    </h2>
+                </div>
+                @endforelse
             </div>
         </div>
-    </div>
 </x-app-layout>
