@@ -6,7 +6,7 @@ use App\Models\Series;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class SeriesTest extends TestCase
@@ -23,9 +23,9 @@ class SeriesTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->get('/series');
+            ->get(route('series.index'));
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_series_create_validate()
@@ -34,16 +34,20 @@ class SeriesTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->from('/series/create')
-            ->post('/series/store', [
-                'name' => 'T',
-            ]);
+            ->from(route('series.create'))
+            ->post(
+                route('series.store'),
+                [
+
+                    'name' => 'T',
+                ]
+            );
 
         $response->assertStatus(302);
 
         $response
             ->assertSessionHasErrors(['name'])
-            ->assertRedirect('/series/create');
+            ->assertRedirect(route('series.create'));
     }
 
     public function test_series_save()
@@ -53,16 +57,19 @@ class SeriesTest extends TestCase
         $serieName = "The simple Series";
         $response = $this
             ->actingAs($user)
-            ->from('/series/create')
-            ->post('/series/store', [
-                'name' => $serieName,
-            ]);
+            ->from(route('series.create'))
+            ->post(
+                route('series.store'),
+                [
+                    'name' => $serieName,
+                ]
+            );
         $series = $user->series->filter(fn ($series) => $series->name == $serieName);
 
         $this->assertNotEmpty($series, "The series does not exist in the database");
 
         $response
-            ->assertRedirect('/series');
+            ->assertRedirect(route('series.index'));
     }
 
     public function test_series_remove()
@@ -70,17 +77,26 @@ class SeriesTest extends TestCase
         $user = User::factory()
             ->has(Series::factory()->count(2))
             ->create();
+        /** @var Collection */
+        $series = $user->series;
 
         $response = $this
             ->actingAs($user)
-            ->from('/series')
-            ->delete("/series/{$user->series[0]->id}");
+            ->from(route('series.index'))
+            ->delete(
+                route(
+                    'series.destroy',
+                    [
+                        'series' => $series->first()
+                    ]
+                )
+            );
 
         $user->refresh();
 
         $this->assertCount(1, $user->series, "There are 2 series in the database instead of 1");
         $response
-            ->assertRedirect('/series');
+            ->assertRedirect(route('series.index'));
     }
 
     public function test_screen_of_series_update_can_be_rendered()
@@ -93,10 +109,17 @@ class SeriesTest extends TestCase
         $series = $user->series->first();
 
         $response = $this->actingAs($user)
-            ->from('/series')
-            ->get("/series/{$series->id}/edit");
+            ->from(route('series.index'))
+            ->get(
+                route(
+                    'series.edit',
+                    [
+                        'series' => $series->first()->id
+                    ]
+                )
+            );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_series_update_can_be_done()
@@ -108,20 +131,32 @@ class SeriesTest extends TestCase
 
         /** @var  Series */
         $series = $user->series->first();
+        $seriesId = $series->first()->id;
 
         $response = $this->actingAs($user)
-            ->from("/series/{$series->id}/edit")
-            ->patch(
-                "/series/{$series->id}",
-                [
-                    'name' => $serieName
-                ]
+            ->from(
+                route(
+                    'series.edit',
+                    [
+                        'series' => $seriesId
+                    ]
+                )
+            )->patch(
+                route(
+                    'series.update',
+                    [
+                        'series' => $seriesId,
+                        'name' => $serieName
+                    ]
+                )
             );
         $user->refresh();
 
         $seriesNewName = $user->series->first()->name;
 
-        $response->assertRedirect('/series');
-        $this->assertEquals($serieName,$seriesNewName,"The name of the series has not changed");
+        $response
+            ->assertRedirect(route('series.index'));
+
+        $this->assertEquals($serieName, $seriesNewName, "The name of the series has not changed");
     }
 }

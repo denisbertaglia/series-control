@@ -23,17 +23,27 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware('auth')
+    ->group(function () {
 
-    Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
-    Route::get('/series/create', [SeriesController::class, 'create'])->name('series.create');
-    Route::post('/series/store', [SeriesController::class, 'store'])->name('series.store');
-    Route::delete('/series/{series}', [SeriesController::class, 'destroy'])->name('series.destroy');
-    Route::get('/series/{series}/edit', [SeriesController::class, 'edit'])->name('series.edit');
-    Route::patch('/series/{series}', [SeriesController::class, 'update'])->name('series.update');
-});
+        Route::prefix('profile')
+            ->name('profile.')
+            ->group(function () {
+                Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+                Route::patch('/', [ProfileController::class, 'update'])->name('update');
+                Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+            });
+
+        Route::prefix('series')
+            ->name('series.')
+            ->group(function () {
+                Route::get('/', [SeriesController::class, 'index'])->name('index');
+                Route::get('/create', [SeriesController::class, 'create'])->name('create');
+                Route::post('/store', [SeriesController::class, 'store'])->name('store');
+                Route::delete('/{series}', [SeriesController::class, 'destroy'])->name('destroy');
+                Route::get('/{series}/edit', [SeriesController::class, 'edit'])->name('edit');
+                Route::patch('/{series}', [SeriesController::class, 'update'])->name('update');
+            });
+    });
 
 require __DIR__ . '/auth.php';
