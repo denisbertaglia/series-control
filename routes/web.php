@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,15 @@ Route::middleware('auth')
                 Route::delete('/{series}', [SeriesController::class, 'destroy'])->name('destroy');
                 Route::get('/{series}/edit', [SeriesController::class, 'edit'])->name('edit');
                 Route::patch('/{series}', [SeriesController::class, 'update'])->name('update');
+
+                Route::get("{series}/seasons", [SeasonsController::class, 'index'])
+                    ->name('seasons.index');
+                Route::get("{series}/seasons/create", [SeasonsController::class, 'create'])
+                    ->name('seasons.create');
+                Route::put("{series}/seasons", [SeasonsController::class, 'update'])
+                    ->name('seasons.update');
+                Route::delete("{series}/seasons/{season}", [SeasonsController::class, 'delete'])
+                    ->name('seasons.delete');
             });
     });
 

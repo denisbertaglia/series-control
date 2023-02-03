@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Season;
 use App\Models\Series;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
@@ -23,28 +25,45 @@ class SeriesController extends Controller
 
     public function create()
     {
-        $seriesCollection = [
-            (object)[
-                'name' => 'Series Example'
-            ],
-        ];
-        return view('series.create', compact('seriesCollection'));
+        return view('series.create');
     }
 
     public function store(Request $request)
     {
 
         $request->validate([
-            'name' => 'required|min:2',
+            "name" => "required|min:2",
+            "seasonsQts" => "required|min:1"
         ]);
 
-        $series = new Series(['name' => $request->name]);
-        $user = $request
-            ->user();
-        $series = $user
-            ->series()
-            ->save($series);
-        $user->refresh();
+        DB::transaction(function () use ($request) {
+            /* Inserindo series */
+            $seriesName = $request->name;
+            $series = new Series(['name' => $seriesName]);
+            /** @var User */
+            $user = $request
+                ->user();
+
+            /** @var Series */
+            $series = $user
+                ->series()
+                ->save($series);
+            $user->refresh();
+
+            $seriesSeasonsQts = $request->seasonsQts;
+            $seasons = [];
+            for ($i = 1; $i <= $seriesSeasonsQts; $i++) {
+                $seasons[] = new Season(
+                    [
+                        'number' => $i,
+                    ]
+                );
+            }
+            $series
+                ->seasons()
+                ->saveMany($seasons);
+                
+        });
 
         return redirect()->route('series.index');
     }

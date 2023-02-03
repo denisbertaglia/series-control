@@ -17,4 +17,9 @@ class Series extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function seasons()
+    {
+        return $this->hasMany(Season::class);
+    }
 }

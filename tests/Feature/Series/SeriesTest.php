@@ -62,6 +62,7 @@ class SeriesTest extends TestCase
                 route('series.store'),
                 [
                     'name' => $serieName,
+                    'seasonsQts' => 1,
                 ]
             );
         $series = $user->series->filter(fn ($series) => $series->name == $serieName);
