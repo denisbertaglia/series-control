@@ -16,7 +16,7 @@
                 @forelse ($seriesCollection as $series)
                 <div
                     class="border my-2 p-2 rounded d-flex flex-column flex-sm-row justify-content-sm-between align-content-center">
-                    <a href="{{route('series.seasons.index',['series' =>$series])}}" class="p-1 text-break">
+                    <a href="{{route('seasons.index',['series' =>$series])}}" class="p-1 text-break">
                         {{$series->name}}
                     </a>
                     <span class="d-flex gap-2 justify-content-between align-content-center">

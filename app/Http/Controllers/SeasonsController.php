@@ -14,12 +14,12 @@ class SeasonsController extends Controller
         $seasons = $series->seasons;
         $seasonsLastKey = $seasons->keys()->max();
 
-        return view('series.seasons.index', compact('seasons', 'series', 'seasonsLastKey'));
+        return view('seasons.index', compact('seasons', 'series', 'seasonsLastKey'));
     }
 
     public function create(Series $series)
     {
-        return view('series.seasons.create', compact('series'));
+        return view('seasons.create', compact('series'));
     }
 
     public function update(Series $series, Request $request)
@@ -44,7 +44,7 @@ class SeasonsController extends Controller
             ->seasons()
             ->saveMany($seasons);
 
-        return redirect()->route('series.seasons.index', ['series' => $series]);
+        return redirect()->route('seasons.index', ['series' => $series]);
     }
 
     public function delete(Series $series, Season $season)
@@ -60,6 +60,6 @@ class SeasonsController extends Controller
             $season->delete();
         }
 
-        return redirect()->route('series.seasons.index', ['series' => $series]);
+        return redirect()->route('seasons.index', ['series' => $series]);
     }
 }

@@ -36,15 +36,17 @@ Route::middleware('auth')
             });
 
         Route::prefix('series')
-            ->name('series.')
             ->group(function () {
-                Route::get('/', [SeriesController::class, 'index'])->name('index');
-                Route::get('/create', [SeriesController::class, 'create'])->name('create');
-                Route::post('/store', [SeriesController::class, 'store'])->name('store');
-                Route::delete('/{series}', [SeriesController::class, 'destroy'])->name('destroy');
-                Route::get('/{series}/edit', [SeriesController::class, 'edit'])->name('edit');
-                Route::patch('/{series}', [SeriesController::class, 'update'])->name('update');
+                Route::get('/', [SeriesController::class, 'index'])->name('series.index');
+                Route::get('/create', [SeriesController::class, 'create'])->name('series.create');
+                Route::post('/store', [SeriesController::class, 'store'])->name('series.store');
+                Route::delete('/{series}', [SeriesController::class, 'destroy'])->name('series.destroy');
+                Route::get('/{series}/edit', [SeriesController::class, 'edit'])->name('series.edit');
+                Route::patch('/{series}', [SeriesController::class, 'update'])->name('series.update');
+            });
 
+        Route::prefix('series')
+            ->group(function () {
                 Route::get("{series}/seasons", [SeasonsController::class, 'index'])
                     ->name('seasons.index');
                 Route::get("{series}/seasons/create", [SeasonsController::class, 'create'])

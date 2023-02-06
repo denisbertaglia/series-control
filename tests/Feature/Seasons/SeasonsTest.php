@@ -18,12 +18,16 @@ class SeasonsTest extends TestCase
         $user = User::factory()
             ->has(
                 Series::factory()
+                    ->has(
+                        Season::factory()
+                            ->count(1)
+                    )
                     ->count(1)
             )->create();
         $series = $user->series->first();
         $response = $this->actingAs($user)
             ->from(route('series.index'))
-            ->get(route('series.seasons.index', ['series' => $series->id]));
+            ->get(route('seasons.index', ['series' => $series->id]));
         $response->assertOk();
     }
 
@@ -41,6 +45,29 @@ class SeasonsTest extends TestCase
         $this->assertCount(3, $seasons);
     }
 
+    public function test_season_of_a_series_can_be_add()
+    {
+        $user = User::factory()
+            ->has(
+                Series::factory()
+                    ->has(Season::factory()->count(2))
+                    ->count(1)
+            )->create();
+        $series = $user->series->first();
+
+        $response = $this->actingAs($user)
+            ->get(
+                route(
+                    'seasons.create',
+                    [
+                        'series' => $series->id,
+                    ]
+                )
+            );
+        $user->refresh();
+        $response->assertOk();
+    }
+
     public function test_season_of_a_series_can_be_added_later()
     {
         $user = User::factory()
@@ -56,19 +83,19 @@ class SeasonsTest extends TestCase
         $response = $this->actingAs($user)
             ->from(
                 route(
-                    'series.seasons.create',
+                    'seasons.create',
                     [
                         'series' => $series->id,
                     ]
                 )
             )->put(
-                route('series.seasons.update', ['series' => $series->id]),
+                route('seasons.update', ['series' => $series->id]),
                 [
                     'seasonsQts' => 2,
                 ]
             );
         $user->refresh();
-        $response->assertRedirect();
+        $response->assertRedirect(route('seasons.index', ['series' => $series->id]));
 
         $seasonsCount = $user
             ->series
@@ -92,14 +119,14 @@ class SeasonsTest extends TestCase
         $response = $this->actingAs($user)
             ->from(
                 route(
-                    'series.seasons.create',
+                    'seasons.create',
                     [
                         'series' => $series->id,
                     ]
                 )
             )->delete(
                 route(
-                    'series.seasons.delete',
+                    'seasons.delete',
                     [
                         'series' => $series->id,
                         'season' => $seasonLast->id,

@@ -12,7 +12,7 @@
                     <a href="{{route('series.index')}}" class="btn btn-secondary">
                         {{__("Return")}}
                     </a>
-                    <a href="{{route('series.seasons.create',['series' =>$series])}}" class="btn btn-primary">
+                    <a href="{{route('seasons.create',['series' =>$series])}}" class="btn btn-primary">
                         {{__("Add Season")}}
                     </a>
                 </div>
@@ -25,7 +25,7 @@
                     <span class="d-flex gap-2 justify-content-between align-content-center">
                         @if ($seasonsLastKey == $key)
                         <x-danger-button  data-bs-toggle="modal" data-bs-target="#confirmSeriesDeletion"
-                            data-bs-action="{{route('series.seasons.delete',['series' =>$series,'season' =>$season])}}" >
+                            data-bs-action="{{route('seasons.delete',['series' =>$series,'season' =>$season])}}" >
                             {{__("Remove")}}
                         </x-danger-button>
                         @endif

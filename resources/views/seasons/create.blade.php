@@ -9,11 +9,11 @@
         <div class="row">
             <div class="p-4 bg-white shadow rounded">
                 <div class="d-flex align-content-center mb-2">
-                    <a href="{{route('series.seasons.index',['series' =>$series])}}" class="btn btn-secondary">
+                    <a href="{{route('seasons.index',['series' =>$series])}}" class="btn btn-secondary">
                         {{__("Return")}}
                     </a>
                 </div>
-                <form action="{{route('series.seasons.update',['series' =>$series])}}" method="post">
+                <form action="{{route('seasons.update',['series' =>$series])}}" method="post">
                     @csrf
                     @method('PUT')
                     <div class="row">
