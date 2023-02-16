@@ -5,6 +5,7 @@ namespace Tests\Feature\Seasons;
 use App\Models\Season;
 use App\Models\Series;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Episode;
 use App\Models\Season;
 use App\Models\Series;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,13 +35,14 @@ class SeriesController extends Controller
 
         $request->validate([
             "name" => "required|min:2",
-            "seasonsQts" => "required|min:1"
+            "seasonsQts" => "required|min:1",
+            "episodesSeasonsQts" => "required|min:1",
         ]);
 
         DB::transaction(function () use ($request) {
             /* Inserindo series */
             $seriesName = $request->name;
-            $series = new Series(['name' => $seriesName]);
+
             /** @var User */
             $user = $request
                 ->user();
@@ -47,22 +50,30 @@ class SeriesController extends Controller
             /** @var Series */
             $series = $user
                 ->series()
-                ->save($series);
+                ->create([
+                    'name' => $seriesName,
+                ]);
+
+            $seasons = [];
+            for ($i = 1; $i <= $request->seasonsQts; $i++) {
+                $seasons[] = [
+                    'series_id' => $series->id,
+                    'number' => $i,
+                ];
+            }
+            Season::insert($seasons);
             $user->refresh();
 
-            $seriesSeasonsQts = $request->seasonsQts;
-            $seasons = [];
-            for ($i = 1; $i <= $seriesSeasonsQts; $i++) {
-                $seasons[] = new Season(
-                    [
-                        'number' => $i,
-                    ]
-                );
+            $episodes = [];
+            foreach ($series->seasons as $season) {
+                for ($j = 1; $j <= $request->episodesSeasonsQts; $j++) {
+                    $episodes[] = [
+                        'season_id' => $season->id,
+                        'number' => $j
+                    ];
+                }
             }
-            $series
-                ->seasons()
-                ->saveMany($seasons);
-                
+            Episode::insert($episodes);
         });
 
         return redirect()->route('series.index');

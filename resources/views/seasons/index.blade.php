@@ -19,13 +19,13 @@
                 @forelse ($seasons as $key => $season)
                 <div
                     class="border my-2 p-2 rounded d-flex flex-column flex-sm-row justify-content-sm-between align-content-center">
-                    <a href="#" class="p-1 text-break">
+                    <a href="{{route('episodes.index',['season' =>$season])}}" class="p-1 text-break">
                         Season {{$season->number}}
                     </a>
                     <span class="d-flex gap-2 justify-content-between align-content-center">
                         @if ($seasonsLastKey == $key)
-                        <x-danger-button  data-bs-toggle="modal" data-bs-target="#confirmSeriesDeletion"
-                            data-bs-action="{{route('seasons.delete',['series' =>$series,'season' =>$season])}}" >
+                        <x-danger-button data-bs-toggle="modal" data-bs-target="#confirmSeriesDeletion"
+                            data-bs-action="{{route('seasons.delete',['series' =>$series,'season' =>$season])}}">
                             {{__("Remove")}}
                         </x-danger-button>
                         @endif

@@ -3,6 +3,8 @@
 namespace Tests\Feature\Series;
 
 use App\Models\Series;
+use App\Models\Seasons;
+use App\Models\Episode;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -62,12 +64,24 @@ class SeriesTest extends TestCase
                 route('series.store'),
                 [
                     'name' => $serieName,
-                    'seasonsQts' => 1,
+                    'seasonsQts' => 2,
+                    'episodesSeasonsQts' => 24,
                 ]
             );
+
+        /** @var Collection<Series> */
         $series = $user->series->filter(fn ($series) => $series->name == $serieName);
 
+        /** @var Collection<Seasons> */
+        $seasons = $series->first()->seasons;
+
+        /** @var Collection<Episode> */
+        $episode = $seasons->first()->episodes;
+
         $this->assertNotEmpty($series, "The series does not exist in the database");
+        $this->assertCount(2, $seasons, "The seasons of the series do not exist in the database");
+        $this->assertCount(24, $episode, "The episode of the seasons do not exist in the database");
+
 
         $response
             ->assertRedirect(route('series.index'));
