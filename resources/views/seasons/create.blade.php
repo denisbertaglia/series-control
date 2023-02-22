@@ -23,6 +23,12 @@
                                 :value="old('seasonsQts')??1" required />
                             <x-input-error class="mt-2" :messages="$errors->get('seasonsQts')" />
                         </div>
+                        <div class="col-12 col-lg-4">
+                            <x-input-label for="name" :value="__('Episodes per Seasons Quantity')" />
+                            <x-text-input class="mt-1" type="number" min='1' id="name" name="episodesSeasonsQts"
+                                :value="old('episodesSeasonsQts')??1" required />
+                            <x-input-error class="mt-2" :messages="$errors->get('episodesSeasonsQts')" />
+                        </div>
                         <div class="col-12 col-lg-12 mt-2">
                             <button type="submit" class="btn btn-primary">
                                 {{__("Add")}}

@@ -7,7 +7,6 @@ use App\Models\Series;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SeasonsTest extends TestCase
@@ -93,6 +92,7 @@ class SeasonsTest extends TestCase
                 route('seasons.update', ['series' => $series->id]),
                 [
                     'seasonsQts' => 2,
+                    'episodesSeasonsQts' => 0,
                 ]
             );
         $user->refresh();
@@ -138,5 +138,43 @@ class SeasonsTest extends TestCase
 
         $this->assertNull(Season::find($seasonLast->id), "The season has not been removed.");
         $response->assertRedirect();
+    }
+
+    public function test_season_of_a_series_can_be_added_with_episodes()
+    {
+        $user = User::factory()
+            ->has(
+                Series::factory()
+                    ->count(1)
+            )->create();
+        $series = $user->series->first();
+
+        $response = $this->actingAs($user)
+            ->from(route(
+                'seasons.create',
+                [
+                    'series' => $series->id,
+                ]
+            ))
+            ->put(
+                route(
+                    'seasons.update',
+                    [
+                        'series' => $series->id,
+                    ]
+                ),
+                [
+                    'seasonsQts' => 2,
+                    'episodesSeasonsQts' => 12
+                ]
+            );
+        $user->refresh();
+        $response->assertRedirect(route('seasons.index', ['series' => $series->id]));
+        /** @var Series */
+        $series = $user->series->first();
+        /** @var Season */
+        $seasons = $series->seasons->first();
+        $episodes = $seasons->episodes;
+        $this->assertCount(12, $episodes, "The quantity of episodes isn't correct.");
     }
 }

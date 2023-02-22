@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Episode;
 use App\Models\Season;
 use App\Models\Series;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,24 +26,40 @@ class SeasonsController extends Controller
     public function update(Series $series, Request $request)
     {
         $request->validate([
-            "seasonsQts" => "required|min:1"
+            "seasonsQts" => "required|min:1",
+            "episodesSeasonsQts" => "required"
         ]);
         $seasonsQtsActive = $series
             ->seasons
             ->count();
 
         $seriesSeasonsQts = $request->seasonsQts;
+        $episodesSeasonsQts = $request->episodesSeasonsQts;
         $seasons = [];
         for ($i = 1; $i <= $seriesSeasonsQts; $i++) {
-            $seasons[] = new Season(
-                [
-                    'number' => $seasonsQtsActive + $i,
-                ]
-            );
+            $seasons[] =
+                new Season(
+                    [
+                        'number' => $seasonsQtsActive + $i,
+                    ]
+                );
         }
-        $series
+        $seasons = $series
             ->seasons()
             ->saveMany($seasons);
+        $episodes = [];
+        foreach ($seasons as $key => $season) {
+            for ($j = 1; $j <= $episodesSeasonsQts; $j++) {
+                $episodes[] =
+                    [
+                        'number' => $j,
+                        'season_id' => $season->id,
+                    ];
+            }
+        }
+        Episode::insert($episodes);
+
+        $series->refresh();
 
         return redirect()->route('seasons.index', ['series' => $series]);
     }
