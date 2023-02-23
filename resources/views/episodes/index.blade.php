@@ -9,7 +9,7 @@
         <div class="row">
             <div class="p-4 bg-white shadow rounded">
                 <div class="d-flex  gap-3 align-content-center mb-2">
-                    <a href="{{route('seasons.index',['series' =>$series])}}" class="btn btn-secondary">
+                    <a href="{{route('seasons.index',['series' =>$seriesId])}}" class="btn btn-secondary">
                         {{__("Return")}}
                     </a>
                     <a href="{{route('episodes.create', ['season' => $season])}}" class="btn btn-primary">

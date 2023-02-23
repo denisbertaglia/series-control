@@ -62,7 +62,6 @@ class SeriesController extends Controller
                 ];
             }
             Season::insert($seasons);
-            $user->refresh();
 
             $episodes = [];
             foreach ($series->seasons as $season) {

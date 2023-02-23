@@ -18,7 +18,7 @@ class SeasonsController extends Controller
         return view('seasons.index', compact('seasons', 'series', 'seasonsLastKey'));
     }
 
-    public function create(Series $series)
+    public function create($series)
     {
         return view('seasons.create', compact('series'));
     }
@@ -59,9 +59,7 @@ class SeasonsController extends Controller
         }
         Episode::insert($episodes);
 
-        $series->refresh();
-
-        return redirect()->route('seasons.index', ['series' => $series]);
+        return redirect()->route('seasons.index', ['series' => $series->id]);
     }
 
     public function delete(Series $series, Season $season)

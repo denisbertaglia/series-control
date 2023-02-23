@@ -13,18 +13,16 @@ class EpisodeController extends Controller
     public function index(Season $season)
     {
         $episodes = $season->episodes;
-        $series = $season->series;
+        $seriesId = $season->series_id;
 
         $episodesLastKey = $episodes->keys()->max();
 
-        return view('episodes.index', compact('series', 'episodes', 'season','episodesLastKey'));
+        return view('episodes.index', compact('seriesId', 'episodes', 'season','episodesLastKey'));
     }
 
     public function create(Season $season)
     {
-        $episodes = $season->episodes;
-        $series = $season->series;
-        return view('episodes.create', compact('series', 'episodes', 'season'));
+        return view('episodes.create', compact( 'season'));
     }
 
     public function store(Season $season, Request $request)
@@ -38,13 +36,12 @@ class EpisodeController extends Controller
             $seasonEpisodesQts = $seasonCount + $request->episodesQts;
             $episodes = [];
             for ($i = ($seasonCount + 1); $i <= $seasonEpisodesQts; $i++) {
-                $episodes[] = new Episode([
-                    'number' => $i
-                ]);
+                $episodes[] = [
+                    'number' => $i,
+                    'season_id'=> $season->id,
+                ];
             }
-            $season
-                ->episodes()
-                ->saveMany($episodes);
+            Episode::insert($episodes);
         });
 
         return redirect()->route('episodes.index', ['season' => $season]);
