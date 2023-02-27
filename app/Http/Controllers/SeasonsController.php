@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Season\SeasonUpdateRequest;
 use App\Models\Episode;
 use App\Models\Season;
 use App\Models\Series;
+use App\Repositories\SeasonRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeasonsController extends Controller
 {
+    public function __construct(private SeasonRepository $seasonRepository)
+    {
+
+    }
+
     public function index(Series $series)
     {
         $seasons = $series->seasons;
@@ -23,41 +31,9 @@ class SeasonsController extends Controller
         return view('seasons.create', compact('series'));
     }
 
-    public function update(Series $series, Request $request)
+    public function update(Series $series, SeasonUpdateRequest $request)
     {
-        $request->validate([
-            "seasonsQts" => "required|min:1",
-            "episodesSeasonsQts" => "required"
-        ]);
-        $seasonsQtsActive = $series
-            ->seasons
-            ->count();
-
-        $seriesSeasonsQts = $request->seasonsQts;
-        $episodesSeasonsQts = $request->episodesSeasonsQts;
-        $seasons = [];
-        for ($i = 1; $i <= $seriesSeasonsQts; $i++) {
-            $seasons[] =
-                new Season(
-                    [
-                        'number' => $seasonsQtsActive + $i,
-                    ]
-                );
-        }
-        $seasons = $series
-            ->seasons()
-            ->saveMany($seasons);
-        $episodes = [];
-        foreach ($seasons as $key => $season) {
-            for ($j = 1; $j <= $episodesSeasonsQts; $j++) {
-                $episodes[] =
-                    [
-                        'number' => $j,
-                        'season_id' => $season->id,
-                    ];
-            }
-        }
-        Episode::insert($episodes);
+        $this->seasonRepository->update($series, $request);
 
         return redirect()->route('seasons.index', ['series' => $series->id]);
     }

@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Episode\EpisodeStoreRequest;
 use App\Models\Episode;
 use App\Models\Season;
+use App\Repositories\EpisodeRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EpisodeController extends Controller
 {
+    public function __construct(private EpisodeRepository $episodeRepository)
+    {
+    }
+
     public function index(Season $season)
     {
         $episodes = $season->episodes;
@@ -17,49 +23,24 @@ class EpisodeController extends Controller
 
         $episodesLastKey = $episodes->keys()->max();
 
-        return view('episodes.index', compact('seriesId', 'episodes', 'season','episodesLastKey'));
+        return view('episodes.index', compact('seriesId', 'episodes', 'season', 'episodesLastKey'));
     }
 
     public function create(Season $season)
     {
-        return view('episodes.create', compact( 'season'));
+        return view('episodes.create', compact('season'));
     }
 
-    public function store(Season $season, Request $request)
+    public function store(Season $season, EpisodeStoreRequest $request)
     {
-        $request->validate([
-            "episodesQts" => "required|min:1"
-        ]);
-
-        DB::transaction(function () use ($season, $request) {
-            $seasonCount = $season->episodes->count();
-            $seasonEpisodesQts = $seasonCount + $request->episodesQts;
-            $episodes = [];
-            for ($i = ($seasonCount + 1); $i <= $seasonEpisodesQts; $i++) {
-                $episodes[] = [
-                    'number' => $i,
-                    'season_id'=> $season->id,
-                ];
-            }
-            Episode::insert($episodes);
-        });
+        $this->episodeRepository->store($season,  $request);
 
         return redirect()->route('episodes.index', ['season' => $season]);
     }
 
     public function update(Season $season, Request $request)
     {
-
-        $episodes = (is_null($request->episodes)) ? [] : $request->episodes;
-
-        DB::transaction(function () use ($season, $episodes) {
-            /** @var Collection<Episode> */
-            $season->episodes
-                ->each(function ($episode) use ($episodes) {
-                    $episode->watched = in_array($episode->id, $episodes);
-                });
-            $season->push();
-        });
+        $this->episodeRepository->update($season,  $request);
 
         return redirect()->route('episodes.index', ['season' => $season]);
     }
