@@ -26,7 +26,6 @@ class EloquentEpisodeRepository implements EpisodeRepository
             }
             Episode::insert($episodes);
         });
-
     }
 
     public function update(Season $season, Request $request): void
@@ -41,6 +40,21 @@ class EloquentEpisodeRepository implements EpisodeRepository
                 });
             $season->push();
         });
+    }
 
+    public function destroy(Season $season, Episode $episode): void
+    {
+        /** @var Collection */
+        $episodes = $season->episodes;
+
+        $episodeHas = $episodes->contains(function (Episode $value, $key) use ($episode) {
+            return $value->id == $episode->id;
+        });
+
+        DB::transaction(function () use ($episode, $episodeHas) {
+            if ($episodeHas) {
+                $episode->delete();
+            }
+        });
     }
 }

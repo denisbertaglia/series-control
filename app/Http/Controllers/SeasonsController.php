@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Season\SeasonUpdateRequest;
-use App\Models\Episode;
 use App\Models\Season;
 use App\Models\Series;
 use App\Repositories\SeasonRepository;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SeasonsController extends Controller
 {
@@ -17,7 +13,6 @@ class SeasonsController extends Controller
     {
 
     }
-
     public function index(Series $series)
     {
         $seasons = $series->seasons;
@@ -40,16 +35,8 @@ class SeasonsController extends Controller
 
     public function delete(Series $series, Season $season)
     {
-        /** @var Collection */
-        $seasons = $series->seasons;
 
-        $seasonHas = $seasons->contains(function (Season $value, $key) use ($season) {
-            return $value->id == $season->id;
-        });
-
-        if ($seasonHas) {
-            $season->delete();
-        }
+        $this->seasonRepository->delete($series, $season);
 
         return redirect()->route('seasons.index', ['series' => $series]);
     }

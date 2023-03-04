@@ -127,7 +127,7 @@ class SeasonsTest extends TestCase
                 )
             )->delete(
                 route(
-                    'seasons.delete',
+                    'seasons.destroy',
                     [
                         'series' => $series->id,
                         'season' => $seasonLast->id,

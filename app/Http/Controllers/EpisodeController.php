@@ -6,9 +6,7 @@ use App\Http\Requests\Episode\EpisodeStoreRequest;
 use App\Models\Episode;
 use App\Models\Season;
 use App\Repositories\EpisodeRepository;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class EpisodeController extends Controller
 {
@@ -47,20 +45,7 @@ class EpisodeController extends Controller
 
     public function destroy(Season $season, Episode $episode)
     {
-
-        /** @var Collection */
-        $episodes = $season->episodes;
-
-        $episodeHas = $episodes->contains(function (Episode $value, $key) use ($episode) {
-            return $value->id == $episode->id;
-        });
-
-        DB::transaction(function () use ($episode, $episodeHas) {
-            if ($episodeHas) {
-                $episode->delete();
-            }
-        });
-
+        $this->episodeRepository->destroy($season, $episode);
 
         return redirect()->route('episodes.index', ['season' => $season]);
     }

@@ -52,19 +52,22 @@ Route::middleware('auth')
                 Route::put("{series}/seasons", [SeasonsController::class, 'update'])
                     ->name('seasons.update');
                 Route::delete("{series}/seasons/{season}", [SeasonsController::class, 'delete'])
-                    ->name('seasons.delete');
+                    ->name('seasons.destroy');
             });
-
-        Route::get("seasons/{season}/episodes", [EpisodeController::class, 'index'])
-            ->name('episodes.index');
-        Route::get("seasons/{season}/episodes/create", [EpisodeController::class, 'create'])
-            ->name('episodes.create');
-        Route::post("seasons/{season}/episodes", [EpisodeController::class, 'store'])
-            ->name('episodes.store');
-        Route::put("seasons/{season}/episodes", [EpisodeController::class, 'update'])
-            ->name('episodes.update');
-        Route::delete("seasons/{season}/episodes/{episode}", [EpisodeController::class, 'destroy'])
-            ->name('episodes.destroy');
+            
+        Route::prefix('seasons')
+            ->group(function () {
+                Route::get("{season}/episodes", [EpisodeController::class, 'index'])
+                    ->name('episodes.index');
+                Route::get("{season}/episodes/create", [EpisodeController::class, 'create'])
+                    ->name('episodes.create');
+                Route::post("{season}/episodes", [EpisodeController::class, 'store'])
+                    ->name('episodes.store');
+                Route::put("{season}/episodes", [EpisodeController::class, 'update'])
+                    ->name('episodes.update');
+                Route::delete("{season}/episodes/{episode}", [EpisodeController::class, 'destroy'])
+                    ->name('episodes.destroy');
+            });
     });
 
 require __DIR__ . '/auth.php';

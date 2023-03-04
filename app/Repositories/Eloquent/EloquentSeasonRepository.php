@@ -45,4 +45,18 @@ class EloquentSeasonRepository implements SeasonRepository
             Episode::insert($episodes);
         });
     }
+    public function delete(Series $series, Season $season): void
+    {
+        /** @var Collection */
+        $seasons = $series->seasons;
+
+        $seasonHas = $seasons->contains(function (Season $value, $key) use ($season) {
+            return $value->id == $season->id;
+        });
+
+        if ($seasonHas) {
+            $season->delete();
+        }
+
+    }
 }
