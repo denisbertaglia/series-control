@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeasonsController;
@@ -21,9 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')
     ->group(function () {
@@ -54,7 +53,7 @@ Route::middleware('auth')
                 Route::delete("{series}/seasons/{season}", [SeasonsController::class, 'delete'])
                     ->name('seasons.destroy');
             });
-            
+
         Route::prefix('seasons')
             ->group(function () {
                 Route::get("{season}/episodes", [EpisodeController::class, 'index'])

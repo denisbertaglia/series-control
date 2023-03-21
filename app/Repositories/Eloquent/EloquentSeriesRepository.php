@@ -7,6 +7,7 @@ use App\Models\Episode;
 use App\Models\Season;
 use App\Repositories\SeriesRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class EloquentSeriesRepository implements SeriesRepository
 {
@@ -46,6 +47,20 @@ class EloquentSeriesRepository implements SeriesRepository
                 }
             }
             Episode::insert($episodes);
+        });
+    }
+
+    public function count(Request $request): int
+    {
+        return DB::transaction(function () use ($request) {
+
+            /** @var User */
+            $user = $request
+                ->user();
+
+            return $user
+                ->series
+                ->count();
         });
     }
 }
