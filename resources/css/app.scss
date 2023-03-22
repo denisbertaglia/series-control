@@ -7,3 +7,15 @@
 .min-view {
     min-height: 100vh;
 }
+
+@include media-breakpoint-up(lg) {
+    .featurette-heading {
+        margin-top: 7rem;
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .featurette-heading {
+        font-size: 50px;
+    }
+}

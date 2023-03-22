@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="container">
+    <div class="container ">
         <div class="row">
             <div class="col-3 p-3 m-2 d-flex align-items-startbg-white shadow rounded ">
                 <h2 class="bi text-muted flex-shrink-0 me-3">
