@@ -20,7 +20,7 @@ Series control system written in Laravel 9.
 1. Clone this repository:
 
 ```
-git clone <https://github.com/denisbertaglia/series-control.git>
+git clone https://github.com/denisbertaglia/series-control.git
 
 ```
 
