@@ -1,6 +1,7 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/denisbertaglia/series-control/readme/public/img/logomark.svg" width="180" alt="Laravel Logo">
+<img src="https://raw.githubusercontent.com/denisbertaglia/series-control/readme/public/img/logomark.svg" width="180" alt="Logo">
 </p>
+
 
 ## Save the series
 Series control system written in Laravel 9.
