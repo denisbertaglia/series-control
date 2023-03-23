@@ -22,7 +22,6 @@ Series control system written in Laravel 9.
 
 ```
 git clone https://github.com/denisbertaglia/series-control.git
-
 ```
 
 2. Install the project's php dependencies:
