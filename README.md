@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/denisbertaglia/series-control/readme/public/img/logomark.svg" width="180" alt="Logo">
 </p>
 
-
+[Leia esta página em português](./README-pt.md)
 ## Save the series
 Series control system written in Laravel 9.
 
@@ -25,47 +25,64 @@ git clone https://github.com/denisbertaglia/series-control.git
 
 ```
 
-2. Install project dependencies:
+2. Install the project's php dependencies:
 
 ```
 composer install
-
 ```
 
-3. Create a .env file and configure environment variables:
+2. Install the project's php dependencies:
+
+```
+composer install
+```
+
+4. Create a .env file and configure environment variables:
 
 ```
 cp .env.example .env
-
 ```
 
-4. If using sqlite, modify the .env:
-
-```
-DB_CONNECTION=sqlite
-
-```
-
-5. Generate the application key:
+4. Generate the application key:
 
 ```
 php artisan key:generate
-
 ```
 
-6. Create a database and configure the information in the .env file.
-7. Run migrations to create database tables:
+5. Configure the connection just like sqlite in the .env file.
+
+```
+DB_CONNECTION=sqlite
+```
+
+6. Run migrations to create database tables:
 
 ```
 php artisan migrate
-
 ```
 
-8. Start the server:
+7. Install the project's js dependencies:
+
+```
+npm install
+```
+
+8. Generate the assets for production
+
+```
+npm run build
+```
+
+9. Run tests:
+
+```
+php artisan test
+```
+
+10. Start the server:
 
 ```
 php artisan serve
-
 ```
 
 ## License
