@@ -6,7 +6,7 @@
 ## Save the series
 
 Sistema de controle de séries escrito em Laravel 9.
-shot
+
 <img src="./public/img/screenshot.jpg"  alt="Screen">
 ## Características
 
