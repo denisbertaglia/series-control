@@ -7,7 +7,7 @@
 
 Sistema de controle de séries escrito em Laravel 9.
 
-<img src="./public/img/screenshot.jpg"  alt="Screen">
+<img src="./public/img/screenshot2.jpg"  alt="Screen">
 
 ## Características
 
