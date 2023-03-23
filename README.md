@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/denisbertaglia/series-control/readme/public/img/logomark.svg" width="180" alt="Logo">
 </p>
 
-[Leia esta página em português](./README-pt.md)
+[Leia esta página em português :brazil: ](./README-pt.md)
 ## Save the series
 Series control system written in Laravel 9.
 
